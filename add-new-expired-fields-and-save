@@ -1,0 +1,40 @@
+//Add Expired Field in Products
+add_action( 'woocommerce_product_options_general_product_data', 'expiredProduct_add_fields' );
+function expiredProduct_add_fields() {
+ 
+  global $woocommerce, $post;
+  
+  echo '<div class="options_group">';
+  
+  // Number Field
+	woocommerce_wp_text_input( 
+		array( 
+			'id'                => '_new_field', 
+			'label'             => __( 'Expired', 'woocommerce' ), 
+			'placeholder'       => '', 
+			'description'       => __( 'Enter the expired date.', 'woocommerce' ),
+			'type'              => 'number', 
+			'custom_attributes' => array(
+				'step' 	=> 'any',
+				'min'	=> '0'
+			) 
+		)
+	);
+  
+  
+  echo '</div>';
+	
+}
+
+// Save Fields
+add_action( 'woocommerce_process_product_meta', 'expiredProduct_add_fields_save' );
+add_action( 'dokan_process_product_meta', 'expiredProduct_fields_save' );
+add_action( 'dokan_new_product_added', 'expiredProduct_add_fields_save' );
+function expiredProduct_add_fields_save( $post_id ){
+		
+	// Number Field
+	$woocommerce_new_field = $_POST['_new_field'];
+	if( !empty( $woocommerce_new_field) )
+		update_post_meta( $post_id, '_new_field', esc_attr( $woocommerce_new_field ) );
+	
+}
